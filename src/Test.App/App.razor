@@ -1,0 +1,51 @@
+﻿@using System.Reflection
+@using Microsoft.AspNetCore.Components.WebAssembly.Services
+@using RonSijm.Blazyload.Features.DIComponents
+@using Test.Store.WeatherStore.Services
+@inject WeatherStateService WeatherStateService
+@inject BlazyAssemblyLoader AssemblyLoader
+
+<Fluxor.Blazor.Web.StoreInitializer />
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="lazyLoadedAssemblies"
+    OnNavigateAsync="@OnNavigateAsync">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+
+@code
+{
+    private List<Assembly> lazyLoadedAssemblies = [];
+
+    private async Task OnNavigateAsync(NavigationContext args)
+    {
+        try
+        {
+            Console.WriteLine(args.Path);
+            if (args.Path.Contains("module"))
+            {
+                var assemblies = await AssemblyLoader.LoadAssembliesAsync(new[]
+                { "Test.Module.wasm" });
+                lazyLoadedAssemblies.AddRange(assemblies);
+                Console.WriteLine("Module Loaded");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error loading assembly: " + ex.Message);
+        }
+    }
+    protected override void OnInitialized()
+    {
+        WeatherStateService.FetchWeatherData();
+    }
+
+}
