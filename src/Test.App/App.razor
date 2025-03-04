@@ -3,7 +3,7 @@
 @using RonSijm.Blazyload.Features.DIComponents
 @using Test.Store.WeatherStore.Services
 @inject WeatherStateService WeatherStateService
-@inject BlazyAssemblyLoader AssemblyLoader
+@inject LazyAssemblyLoader AssemblyLoader
 
 <Fluxor.Blazor.Web.StoreInitializer />
 <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="lazyLoadedAssemblies"
