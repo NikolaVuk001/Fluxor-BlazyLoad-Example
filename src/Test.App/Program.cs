@@ -8,9 +8,9 @@ using Test.App;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-builder.UseBlazyload();
+// builder.UseBlazyload();
 
-builder.Services.AddScoped<BlazyAssemblyLoader>();
+// builder.Services.AddScoped<BlazyAssemblyLoader>();
 
 
 builder.RootComponents.Add<App>("#app");
